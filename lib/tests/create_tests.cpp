@@ -1,0 +1,43 @@
+#include <gtest/gtest.h>
+#include "database/database.h"
+
+// we will create a table with all attributes
+TEST(CreateTest, AllAttributes) {
+    mem_db::Database db;
+
+    db.execute("CREATE TABLE users "
+               "( {key} id : int = 0, "
+               "name : string[50], "
+               "{autoincrement} count : int, "
+               "{unique} weight : double)");
+
+    SUCCEED() << "Table created";
+}
+
+// table with non-existent type
+TEST(CreateTest, NonExistentType) {
+    mem_db::Database db;
+
+    EXPECT_THROW(db.execute("CREATE TABLE users "
+                            "( {key} id : int = 0, "
+                            "name : string[50], "
+                            "{autoincrement} count : int, "
+                            "{unique} car_type : bigint)"), std::runtime_error) << "don't have bigint type";
+}
+
+TEST(CreateTest, UnsupportedCommand) {
+    mem_db::Database db;
+
+    EXPECT_THROW(db.execute("sfjdkfjdkiew"), std::runtime_error) << "Incorrect command";
+}
+
+TEST(CreateTest, IncorrectColumn) {
+    mem_db::Database db;
+
+    EXPECT_THROW(db.execute("CREATE TABLE users "
+                            "( {key} eff: id : int = 0 = 1, "
+                            "name : string[50], "
+                            "{autoincrement} count : int, "
+                            "{unique} car_type : bigint)"), std::runtime_error) << "Incorrect column description";
+
+}
