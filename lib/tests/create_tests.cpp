@@ -41,3 +41,17 @@ TEST(CreateTest, IncorrectColumn) {
                             "{unique} car_type : bigint)"), std::runtime_error) << "Incorrect column description";
 
 }
+
+TEST(CreateTest, EqulentTables) {
+    mem_db::Database db;
+
+    db.execute("CREATE TABLE users "
+               "( {key} id : int = 0, "
+               "name : string[50], "
+               "{autoincrement} count : int, "
+               "{unique} weight : double)");
+
+    EXPECT_THROW(db.execute("CREATE TABLE users "
+                            "( {key} user_id : int = 0"), std::runtime_error) << "Same table names";
+
+}
