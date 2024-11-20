@@ -9,10 +9,9 @@ namespace mem_db {
         }
 
         // add a new table to table list
-        tables[table_name] =
-                std::make_shared<Table>(Table(columns, table_name));
+        tables[table_name] = std::make_shared<Table>(Table(columns, table_name));
 
         // move create command to logger for print log
-//        Logger::create_log(this);
+        Logger::create_log(const_cast<CreateTableCommand &>(*this));
     }
 }

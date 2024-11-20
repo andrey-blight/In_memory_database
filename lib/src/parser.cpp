@@ -16,7 +16,7 @@ namespace mem_db {
         if (std::regex_match(query, matches, create_table_regex)) {
             return parse_create_statement(matches);
         } else if (std::regex_match(query, matches, insert_regex)) {
-            return parse_insert_statement(matches);
+            return parse_create_statement(matches);
         } else {
             throw std::runtime_error("Unsupportable command");
         }
