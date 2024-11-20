@@ -56,6 +56,7 @@ namespace mem_db {
         }
 
         std::vector<Column> columns; // array where we will store column objects
+        std::set<std::string> used_names;
 
         for (auto &column: column_definitions) {
 
@@ -70,6 +71,11 @@ namespace mem_db {
             std::string name = column_matches[2];
             std::string type = column_matches[3];
             std::string default_value = column_matches[4];
+
+            if (used_names.find(name) != used_names.end()) {
+                throw std::runtime_error("Column " + name + " already exist");
+            }
+            used_names.insert(name);
 
             // parse attributes
             bool is_unique = attributes.find("unique") != std::string::npos;

@@ -6,6 +6,7 @@
 #include <regex>
 #include <sstream>
 #include <utility>
+#include <set>
 
 #include "column.h"
 
