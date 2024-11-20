@@ -17,7 +17,7 @@ namespace mem_db {
     public:
         Database() : tables({}) {}
 
-        [[nodiscard]] std::map<std::string, std::shared_ptr<Table>> get_tables() const { return tables; }
+        [[nodiscard]] std::map<std::string, std::shared_ptr<Table>> &get_tables() { return tables; }
 
         void execute(const std::string &query);
     };

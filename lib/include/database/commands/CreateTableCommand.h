@@ -5,9 +5,7 @@
 #include "database/column.h"
 
 namespace mem_db {
-    class Table;
-
-    class Logger;
+//    class Logger;
 
     class CreateTableCommand : public ParserCommand {
     private:
@@ -21,19 +19,7 @@ namespace mem_db {
         void execute(Database &db) const override;
     };
 
-    void CreateTableCommand::execute(Database &db) const {
-        auto &tables = db->get_tables();
-        if (tables.find(table_name) != tables.end()) {
-            throw std::runtime_error("Table " + table_name + " already exist");
-        }
 
-        // add a new table to table list
-        tables[table_name] =
-                std::make_shared<Table>(Table(columns, table_name));
-
-        // move create command to logger for print log
-        Logger::create_log(this);
-    }
 }
 
 

@@ -4,6 +4,7 @@
 #include <memory>
 #include <iostream>
 #include "parser.h"
+#include "commands/CreateTableCommand.h"
 
 namespace mem_db {
     class Logger {
