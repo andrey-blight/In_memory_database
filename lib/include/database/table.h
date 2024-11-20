@@ -3,6 +3,7 @@
 
 #include <utility>
 #include <vector>
+#include <map>
 
 #include "parser.h"
 #include "column.h"
@@ -13,10 +14,9 @@ namespace mem_db {
     private:
         std::string table_name;
         std::vector<Column> columns;
+        std::map<std::string, int> column_to_index; // for fast insert
     public:
-        explicit Table(const std::vector<Column> &columns, std::string table_name) : columns(columns),
-                                                                                     table_name(
-                                                                                             std::move(table_name)) {}
+        explicit Table(const std::vector<Column> &columns, const std::string &table_name);
 
         [[nodiscard]] const std::string &get_table_name() const { return table_name; }
 

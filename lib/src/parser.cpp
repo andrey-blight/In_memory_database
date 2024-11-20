@@ -1,4 +1,5 @@
 #include <database/parser.h>
+#include <iostream>
 
 namespace mem_db {
     std::unique_ptr<ParserCommand> SQLParser::parse_query(const std::string &query) {
@@ -6,11 +7,16 @@ namespace mem_db {
         std::regex create_table_regex(
                 R"(^\s*CREATE\s+TABLE\s+([A-Za-z_]\w*)\s*\((.+)\)\s*$)",
                 std::regex_constants::icase);
+        std::regex insert_regex(
+                R"(^\s*INSERT\s+\(([^)]+)\)\s+TO\s+([A-Za-z_][\w]*)\s*$)",
+                std::regex_constants::icase);
 
         // check what query we have by matching with all regex
         std::smatch matches;
         if (std::regex_match(query, matches, create_table_regex)) {
             return parse_create_statement(matches);
+        } else if (std::regex_match(query, matches, insert_regex)) {
+            return parse_insert_statement(matches);
         } else {
             throw std::runtime_error("Unsupportable command");
         }
@@ -92,6 +98,20 @@ namespace mem_db {
         }
 
         return std::make_unique<CreateTableCommand>(CreateTableCommand{table_name, columns});
+    }
+
+    std::unique_ptr<InsertCommand> SQLParser::parse_insert_statement(const std::smatch &matches) {
+        std::string table_name = matches[1]; // get table name
+        std::istringstream values_stream(matches[2]); // create values stream for splitting by comma
+        std::string value;
+
+        while (std::getline(values_stream, value, ',')) {
+            // delete all spaces
+            value.erase(std::remove_if(value.begin(), value.end(), ::isspace), value.end());
+
+
+        }
+        return std::make_unique<InsertCommand>(InsertCommand("a", {1}));
     }
 }
 

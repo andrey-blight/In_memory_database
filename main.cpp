@@ -4,13 +4,9 @@
 int main() {
     mem_db::Database db;
 
-    db.execute("CREATE TABLE users "
-               "( {key} id : int = 0, "
-               "name : string[50], "
-               "{autoincrement} count : int, "
-               "{unique} weight : double)");
+    db.execute("INSERT (a,b,c) to users");
 
-    std::cout << "Table created successfully!" << std::endl;
+//    std::cout << "Table created successfully!" << std::endl;
 
     return 0;
 }

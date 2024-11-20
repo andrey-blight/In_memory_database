@@ -13,6 +13,9 @@ namespace mem_db {
         std::string default_value;
         size_t length; // length only for string type and byte type
     };
+
+    using Cell = std::variant<int, std::string, double, std::vector<uint8_t>>;
+    using Row = std::vector<Cell>;
 }
 
 #endif //DATABASE_COLUMN_H
