@@ -1,5 +1,4 @@
 #include <database/parser.h>
-#include <iostream>
 
 namespace mem_db {
     std::unique_ptr<ParserCommand> SQLParser::parse_query(const std::string &query) {
@@ -115,15 +114,15 @@ namespace mem_db {
         while (std::getline(values_stream, value, ',')) {
             // delete trailing and leading spaces
             const size_t new_begin = value.find_first_not_of(" \t");
-            const size_t new_end = value.find_last_not_of(" \t");
-            value = value.substr(new_begin, new_end - new_begin + 1);
+            if (new_begin != std::string::npos) {
+                const size_t new_end = value.find_last_not_of(" \t");
+                value = value.substr(new_begin, new_end - new_begin + 1);
+            } else if (!value.empty()) {
+                value = "";
+            }
 
             row.push_back(static_cast<Cell> (value));
-            std::cout << value << "\n";
         }
-        return std::make_unique<InsertCommand>(InsertCommand(table_name, {1}));
+        return std::make_unique<InsertCommand>(InsertCommand(table_name, row));
     }
 }
-
-
-
