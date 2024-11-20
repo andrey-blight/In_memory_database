@@ -13,7 +13,7 @@
 namespace mem_db {
     class Database {
     private:
-        std::vector<std::shared_ptr<Table>> tables{};
+        std::map<std::string, std::shared_ptr<Table>> tables{};
     public:
         Database() : tables({}) {}
 

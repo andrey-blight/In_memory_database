@@ -17,17 +17,15 @@ namespace mem_db {
                         dynamic_cast<CreateTableCommand *>(value.release())
                 );
 
-                std::string new_table_name = create_cmd->get_table_name();
+                const std::string new_table_name = create_cmd->get_table_name();
 
-                for (const auto &table: tables) {
-                    if (table->get_table_name() == new_table_name) {
-                        throw std::runtime_error("Table " + new_table_name + " already exist");
-                    }
+                if (tables.find(create_cmd->get_table_name()) != tables.end()) {
+                    throw std::runtime_error("Table " + new_table_name + " already exist");
                 }
 
                 // add a new table to table list
-                tables.push_back(
-                        std::make_shared<Table>(Table(create_cmd->get_columns(), create_cmd->get_table_name())));
+                tables[create_cmd->get_table_name()] =
+                        std::make_shared<Table>(Table(create_cmd->get_columns(), create_cmd->get_table_name()));
 
                 // move create command to logger for print log
                 Logger::create_log(std::move(create_cmd));

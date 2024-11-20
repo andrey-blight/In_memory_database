@@ -107,17 +107,21 @@ namespace mem_db {
     }
 
     std::unique_ptr<InsertCommand> SQLParser::parse_insert_statement(const std::smatch &matches) {
-        std::string table_name = matches[1]; // get table name
-        std::istringstream values_stream(matches[2]); // create values stream for splitting by comma
+        std::string table_name = matches[2]; // get table name
+        std::istringstream values_stream(matches[1]); // create values stream for splitting by comma
         std::string value;
+        std::vector<Cell> row;
 
         while (std::getline(values_stream, value, ',')) {
-            // delete all spaces
-            value.erase(std::remove_if(value.begin(), value.end(), ::isspace), value.end());
+            // delete trailing and leading spaces
+            const size_t new_begin = value.find_first_not_of(" \t");
+            const size_t new_end = value.find_last_not_of(" \t");
+            value = value.substr(new_begin, new_end - new_begin + 1);
 
-
+            row.push_back(static_cast<Cell> (value));
+            std::cout << value << "\n";
         }
-        return std::make_unique<InsertCommand>(InsertCommand("a", {1}));
+        return std::make_unique<InsertCommand>(InsertCommand(table_name, {1}));
     }
 }
 
