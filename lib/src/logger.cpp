@@ -1,13 +1,14 @@
 #include "database/logger.h"
+#include "database/commands/CreateTableCommand.h"
 
 namespace mem_db {
 
-    void Logger::create_log(std::unique_ptr<CreateTableCommand> command) {
+    void Logger::create_log(CreateTableCommand &command) {
         std::clog << std::boolalpha;
-        std::clog << "Created table:\t" << command->get_table_name() << "\n\n";
+        std::clog << "Created table:\t" << command.get_table_name() << "\n\n";
 
         std::clog << "Columns:\n";
-        for (const auto &col: command->get_columns()) {
+        for (const auto &col: command.get_columns()) {
 
             std::clog << "Type:\t" << col.type << "\n"
                       << "Name:\t" << col.name << "\n"

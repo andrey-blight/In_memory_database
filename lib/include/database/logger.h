@@ -3,12 +3,13 @@
 
 #include <memory>
 #include <iostream>
-#include "parser.h"
 
 namespace mem_db {
+    class CreateTableCommand;
+
     class Logger {
     public:
-        static void create_log(std::unique_ptr<CreateTableCommand> command); // for CREATE TABLE log
+        static void create_log(CreateTableCommand &command); // for CREATE TABLE log
     };
 }
 

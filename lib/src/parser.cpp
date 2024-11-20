@@ -1,4 +1,5 @@
 #include <database/parser.h>
+#include <iostream>
 
 namespace mem_db {
     std::unique_ptr<ParserCommand> SQLParser::parse_query(const std::string &query) {
@@ -107,22 +108,57 @@ namespace mem_db {
 
     std::unique_ptr<InsertCommand> SQLParser::parse_insert_statement(const std::smatch &matches) {
         std::string table_name = matches[2]; // get table name
-        std::istringstream values_stream(matches[1]); // create values stream for splitting by comma
-        std::string value;
-        std::vector<Cell> row;
+        std::string all_values = matches[1]; // create values stream for splitting by comma
+        std::vector<std::string> values;
 
-        while (std::getline(values_stream, value, ',')) {
+        // parse column (we have comma inside {} like {key, autoincrement}, so we need could not just split by a comma)
+        size_t start_column = 0, depth = 0;
+        for (size_t i = 0; i < all_values.length(); ++i) {
+            if (all_values[i] == '"') {
+                ++depth;  // if we inside {} set depth + 1
+            } else if (all_values[i] == '"') {
+                --depth;  // if we exit {} set depth -1
+            } else if (all_values[i] == ',' && depth == 0) {
+                // push column if we find it
+                values.push_back(values.substr(start_column, i - start_column));
+                start_column = i + 1;
+            }
+        }
+        // push last column
+        values.emplace_back(all_values.substr(start_column));
+
+        for (std::string &value: values) {
             // delete trailing and leading spaces
             const size_t new_begin = value.find_first_not_of(" \t");
+
             if (new_begin != std::string::npos) {
                 const size_t new_end = value.find_last_not_of(" \t");
                 value = value.substr(new_begin, new_end - new_begin + 1);
             } else if (!value.empty()) {
+                // this branch means we have value like "  \t " and we need delete spaces.
                 value = "";
             }
 
-            row.push_back(static_cast<Cell> (value));
+            // if we have value like col_name=value we will watch only on value.
+            auto start_search = value.begin();
+            size_t eq_pos = value.find('=');
+            if (eq_pos != std::string::npos) {
+                start_search += static_cast<std::string::difference_type>(eq_pos + 1);
+            }
+
+            // if value like "something" -> something
+            if (*start_search == '"' && *(value.end() - 1) == '"') {
+                size_t start_index = std::distance(value.begin(), start_search) + 1; // skip first "
+                size_t length = value.size() - start_index - 1;                     // len before second "
+                value = value.substr(start_index, length);
+            }
+
+            values.push_back(value);
+            std::cout << value << "\n";
         }
-        return std::make_unique<InsertCommand>(InsertCommand(table_name, row));
+        return std::make_unique<InsertCommand>(InsertCommand(table_name, values));
     }
 }
+
+
+
