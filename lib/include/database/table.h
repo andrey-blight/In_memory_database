@@ -13,15 +13,14 @@ namespace mem_db {
     class Table {
     private:
         std::string table_name;
-        std::vector<Column> columns;
-        std::map<std::string, int> column_to_index; // for fast finding sell in insert statements
+        std::map<std::string, Column> columns; // column name to Column object
         std::vector<Row> rows;
     public:
         explicit Table(const std::vector<Column> &columns, const std::string &table_name);
 
         [[nodiscard]] const std::string &get_table_name() const { return table_name; }
 
-        [[nodiscard]] const std::vector<Column> &get_columns() const { return columns; }
+        [[nodiscard]] const std::map<std::string, Column> &get_columns() const { return columns; }
     };
 }
 

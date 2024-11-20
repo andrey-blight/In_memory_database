@@ -2,6 +2,7 @@
 #define DATABASE_COLUMN_H
 
 #include <string>
+#include <map>
 
 namespace mem_db {
     struct Column {
@@ -15,7 +16,7 @@ namespace mem_db {
     };
 
     using Cell = std::variant<int, std::string, double, std::vector<uint8_t>>;
-    using Row = std::vector<Cell>;
+    using Row = std::map<std::string, Cell>;
 }
 
 #endif //DATABASE_COLUMN_H
