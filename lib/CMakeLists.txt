@@ -25,8 +25,7 @@ include_directories(include)
 file(GLOB_RECURSE LIB_SOURCES src/*.cpp)
 
 # create library database
-add_library(database STATIC ${LIB_SOURCES}
-        src/table.cpp)
+add_library(database STATIC ${LIB_SOURCES})
 target_include_directories(database PUBLIC include)
 
 # Create tests files

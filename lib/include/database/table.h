@@ -14,7 +14,8 @@ namespace mem_db {
     private:
         std::string table_name;
         std::vector<Column> columns;
-        std::map<std::string, int> column_to_index; // for fast insert
+        std::map<std::string, int> column_to_index; // for fast finding sell in insert statements
+        std::vector<Row> rows;
     public:
         explicit Table(const std::vector<Column> &columns, const std::string &table_name);
 

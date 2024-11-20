@@ -9,31 +9,10 @@
 #include <set>
 
 #include "column.h"
+#include "commands/ParserCommand.h"
+#include "commands/CreateTableCommand.h"
 
 namespace mem_db {
-
-    class ParserCommand {
-    public:
-        virtual ~ParserCommand() = default;
-
-        [[nodiscard]] virtual std::string getType() const = 0;
-    };
-
-    // command for execute create table
-    class CreateTableCommand : public ParserCommand {
-    private:
-        std::string table_name;
-        std::vector<Column> columns;
-    public:
-        [[nodiscard]] std::string getType() const override { return "create"; }
-
-        explicit CreateTableCommand(std::string name, const std::vector<Column> &columns) : table_name(std::move(name)),
-                                                                                            columns(columns) {}
-
-        [[nodiscard]] const std::string &get_table_name() const { return table_name; }
-
-        [[nodiscard]] const std::vector<Column> &get_columns() const { return columns; }
-    };
 
     // command for execute create table
     class InsertCommand : public ParserCommand {

@@ -115,8 +115,14 @@ namespace mem_db {
         while (std::getline(values_stream, value, ',')) {
             // delete trailing and leading spaces
             const size_t new_begin = value.find_first_not_of(" \t");
-            const size_t new_end = value.find_last_not_of(" \t");
-            value = value.substr(new_begin, new_end - new_begin + 1);
+
+            if (new_begin != std::string::npos) {
+                const size_t new_end = value.find_last_not_of(" \t");
+                value = value.substr(new_begin, new_end - new_begin + 1);
+            } else if (!value.empty()) {
+                // this branch means we have value like "  \t " and we need delete spaces.
+                value = "";
+            }
 
             row.push_back(static_cast<Cell> (value));
             std::cout << value << "\n";
