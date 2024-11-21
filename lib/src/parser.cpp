@@ -1,5 +1,4 @@
 #include <database/parser.h>
-#include <iostream>
 
 namespace mem_db {
     std::unique_ptr<ParserCommand> SQLParser::parse_query(const std::string &query) {
@@ -127,6 +126,8 @@ namespace mem_db {
         // push last column
         values.emplace_back(all_values.substr(start_column));
 
+        bool eq_statement = false;
+
         for (std::string &value: values) {
             // delete trailing and leading spaces
             const size_t new_begin = value.find_first_not_of(" \t");
@@ -145,6 +146,7 @@ namespace mem_db {
             size_t eq_pos = value.find('=');
             if (eq_pos != std::string::npos) {
                 has_eq = true;
+                eq_statement = true;
                 start_search += static_cast<std::string::difference_type>(eq_pos + 1);
             }
 
@@ -167,12 +169,7 @@ namespace mem_db {
             } else {
                 value = value.substr(start_index, length);
             }
-
-            std::cout << value << "\n";
         }
-        return std::make_unique<InsertCommand>(InsertCommand(table_name, values));
+        return std::make_unique<InsertCommand>(InsertCommand(eq_statement, table_name, values));
     }
 }
-
-
-

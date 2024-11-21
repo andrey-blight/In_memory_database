@@ -12,11 +12,14 @@ namespace mem_db {
 
     class InsertCommand : public ParserCommand {
     private:
+        bool eq_statement;
         std::string table_name;
         std::vector<std::string> values;
     public:
-        explicit InsertCommand(std::string table_name, std::vector<std::string> values) : table_name(
-                std::move(table_name)), values(std::move(values)) {}
+        explicit InsertCommand(bool eq_statement, std::string table_name,
+                               std::vector<std::string> values) : eq_statement(eq_statement),
+                                                                  table_name(std::move(table_name)),
+                                                                  values(std::move(values)) {}
 
         void execute(Database &db) const override;
     };

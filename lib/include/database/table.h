@@ -21,6 +21,8 @@ namespace mem_db {
         [[nodiscard]] const std::string &get_table_name() const { return table_name; }
 
         [[nodiscard]] const std::map<std::string, Column> &get_columns() const { return columns; }
+
+        void insert_row(Row row) { rows.push_back(row); }
     };
 }
 
