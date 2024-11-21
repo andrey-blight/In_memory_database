@@ -114,13 +114,13 @@ namespace mem_db {
         // parse column (we have comma inside {} like {key, autoincrement}, so we need could not just split by a comma)
         size_t start_column = 0, depth = 0;
         for (size_t i = 0; i < all_values.length(); ++i) {
-            if (all_values[i] == '"') {
+            if (all_values[i] == '\"' && depth == 0) {
                 ++depth;  // if we inside {} set depth + 1
-            } else if (all_values[i] == '"') {
+            } else if (all_values[i] == '\"' && depth == 1) {
                 --depth;  // if we exit {} set depth -1
             } else if (all_values[i] == ',' && depth == 0) {
                 // push column if we find it
-                values.push_back(values.substr(start_column, i - start_column));
+                values.push_back(all_values.substr(start_column, i - start_column));
                 start_column = i + 1;
             }
         }
@@ -141,19 +141,33 @@ namespace mem_db {
 
             // if we have value like col_name=value we will watch only on value.
             auto start_search = value.begin();
+            bool has_eq = false;
             size_t eq_pos = value.find('=');
             if (eq_pos != std::string::npos) {
+                has_eq = true;
                 start_search += static_cast<std::string::difference_type>(eq_pos + 1);
             }
 
+            size_t start_index, length;
             // if value like "something" -> something
             if (*start_search == '"' && *(value.end() - 1) == '"') {
-                size_t start_index = std::distance(value.begin(), start_search) + 1; // skip first "
-                size_t length = value.size() - start_index - 1;                     // len before second "
+                start_index = std::distance(value.begin(), start_search) + 1; // skip first "
+                length = value.size() - start_index - 1;                     // len before second "
+            } else if (*start_search == '0' && start_search + 1 != value.end() && *(start_search + 1) == 'x') {
+                start_index = std::distance(value.begin(), start_search) + 2; // skip 0x
+                length = value.size() - start_index;
+            } else {
+                start_index = 0;
+                length = value.size() - start_index;
+            }
+
+            if (has_eq && start_index != 0) {
+                value = value.substr(0, std::distance(value.begin(), start_search)) +
+                        value.substr(start_index, length);
+            } else {
                 value = value.substr(start_index, length);
             }
 
-            values.push_back(value);
             std::cout << value << "\n";
         }
         return std::make_unique<InsertCommand>(InsertCommand(table_name, values));
