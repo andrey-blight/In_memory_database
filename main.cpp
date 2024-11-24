@@ -8,7 +8,7 @@ int main() {
 
     std::cout << "Table created successfully!" << std::endl;
 
-    db.execute("INSERT (id=1, name=\"Andrey Kizhinov\", bin=0xababababb) to users");
+    db.execute(R"(INSERT (1, "Test") to users)");
 
     return 0;
 }

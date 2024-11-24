@@ -1,4 +1,5 @@
 #include <database/parser.h>
+#include <iostream>
 
 namespace mem_db {
     std::unique_ptr<ParserCommand> SQLParser::parse_query(const std::string &query) {
@@ -111,13 +112,15 @@ namespace mem_db {
         std::vector<std::string> values;
 
         // parse column (we have comma inside {} like {key, autoincrement}, so we need could not just split by a comma)
-        size_t start_column = 0, depth = 0;
+        size_t start_column = 0;
+        int status = 0; // 0 — not inside ", 1 — inside "
         for (size_t i = 0; i < all_values.length(); ++i) {
-            if (all_values[i] == '\"' && depth == 0) {
-                ++depth;  // if we inside {} set depth + 1
-            } else if (all_values[i] == '\"' && depth == 1) {
-                --depth;  // if we exit {} set depth -1
-            } else if (all_values[i] == ',' && depth == 0) {
+            if (all_values[i] == '\"' && status == 0) { // if it first " set we inside
+                ++status;  // if we inside {} set depth + 1
+            } else if (all_values[i] == '\"' &&
+                       (status == 1 || status == 2)) { // if we already inside or has > 1 " (like "some "name" here")
+                status = 2;  // if we exit {} set depth -1
+            } else if (all_values[i] == ',' && (status == 2 || status == 0)) { // coma after closed "
                 // push column if we find it
                 values.push_back(all_values.substr(start_column, i - start_column));
                 start_column = i + 1;
@@ -127,6 +130,7 @@ namespace mem_db {
         values.emplace_back(all_values.substr(start_column));
 
         bool eq_statement = false;
+        bool first = true;
 
         for (std::string &value: values) {
             // delete trailing and leading spaces
@@ -142,13 +146,21 @@ namespace mem_db {
 
             // if we have value like col_name=value we will watch only on value.
             auto start_search = value.begin();
-            bool has_eq = false;
             size_t eq_pos = value.find('=');
-            if (eq_pos != std::string::npos) {
-                has_eq = true;
+            size_t quote_pos = value.find('\"');
+            if (eq_pos != std::string::npos && (quote_pos == std::string::npos || eq_pos < quote_pos)) {
+                if (!eq_statement && !first) {
+                    throw std::runtime_error("different statement (with = and without) in one request");
+                }
                 eq_statement = true;
                 start_search += static_cast<std::string::difference_type>(eq_pos + 1);
+            } else {
+                if (eq_statement && !first) {
+                    throw std::runtime_error("different statement (with = and without) in one request");
+                }
+                eq_statement = false;
             }
+            first = false;
 
             size_t start_index, length;
             // if value like "something" -> something
@@ -163,13 +175,17 @@ namespace mem_db {
                 length = value.size() - start_index;
             }
 
-            if (has_eq && start_index != 0) {
+            if (eq_statement && start_index != 0) {
                 value = value.substr(0, std::distance(value.begin(), start_search)) +
                         value.substr(start_index, length);
             } else {
                 value = value.substr(start_index, length);
             }
         }
+        for (const auto &el: values) {
+            std::cout << el << "\n";
+        }
+
         return std::make_unique<InsertCommand>(InsertCommand(eq_statement, table_name, values));
     }
 }
