@@ -182,9 +182,6 @@ namespace mem_db {
                 value = value.substr(start_index, length);
             }
         }
-        for (const auto &el: values) {
-            std::cout << el << "\n";
-        }
 
         return std::make_unique<InsertCommand>(InsertCommand(eq_statement, table_name, values));
     }

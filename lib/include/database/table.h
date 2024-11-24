@@ -15,12 +15,15 @@ namespace mem_db {
         std::string table_name;
         std::map<std::string, Column> columns; // column name to Column object
         std::vector<Row> rows;
+        std::vector<std::string> column_names;
     public:
         explicit Table(const std::vector<Column> &columns, const std::string &table_name);
 
         [[nodiscard]] const std::string &get_table_name() const { return table_name; }
 
         [[nodiscard]] const std::map<std::string, Column> &get_columns() const { return columns; }
+
+        [[nodiscard]] const std::vector<std::string> &get_col_names() const { return column_names; }
 
         void insert_row(Row row) { rows.push_back(row); }
     };
