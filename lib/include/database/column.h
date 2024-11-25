@@ -15,7 +15,7 @@ namespace mem_db {
         size_t length; // length only for string type and byte type
     };
 
-    using Cell = std::variant<int, std::string, double, std::vector<uint8_t>>;
+    using Cell = std::variant<int, std::string, bool, std::vector<uint8_t>>;
     using Row = std::map<std::string, Cell>;
 }
 

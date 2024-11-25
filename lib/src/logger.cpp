@@ -15,7 +15,8 @@ namespace mem_db {
                       << "Primary key:\t" << col.is_primary_key << "\n"
                       << "Autoincrement:\t" << col.is_autoincrement << "\n"
                       << "Unique:\t" << col.is_unique << "\n"
-                      << "default_value:\t" << col.default_value << "\n\n";
+                      << "Default_value:\t" << col.default_value << "\n"
+                      << "Length:\t" << col.length << "\n\n";
         }
     }
 }

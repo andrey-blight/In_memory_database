@@ -1,6 +1,8 @@
 #include "database/commands/InsertCommand.h"
 #include "database/database.h"
 
+#include <iomanip>
+
 namespace mem_db {
     void InsertCommand::execute(Database &db) const {
         Row row;
@@ -30,14 +32,14 @@ namespace mem_db {
             if (current_col.type == "int") {
                 row[col_name] = std::stoi(value);
             } else if (current_col.type == "bool") {
-                row[col_name] = (value == "true");
+                row[col_name] = value == "true";
             } else if (current_col.type == "string") {
                 row[col_name] = value.substr(0, current_col.length);
             } else if (current_col.type == "bytes") {
                 std::vector<uint8_t> bytes;
 
                 for (size_t j = 0; j < current_col.length; j += 2) {
-                    std::string byte_str = value.substr(i, 2);
+                    std::string byte_str = value.substr(j, 2);
                     auto byte = static_cast<uint8_t>(std::stoul(byte_str, nullptr, 16));
                     bytes.push_back(byte);
                 }

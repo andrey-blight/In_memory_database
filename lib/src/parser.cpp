@@ -94,7 +94,7 @@ namespace mem_db {
             }
 
             // check allowed types
-            if (type != "int" && type != "double" && type != "string" && type != "byte") {
+            if (type != "int" && type != "bool" && type != "string" && type != "bytes") {
                 throw std::runtime_error("Unsupported column type: " + type);
             }
 

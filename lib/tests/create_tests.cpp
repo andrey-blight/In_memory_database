@@ -9,7 +9,7 @@ TEST(CreateTest, AllAttributes) {
                "( {key} id : int = 0, "
                "name : string[50], "
                "{autoincrement} count : int, "
-               "{unique} weight : double)");
+               "{unique} hash : bytes[8])");
 
     SUCCEED() << "Table created";
 }
@@ -49,7 +49,7 @@ TEST(CreateTest, EqulentTables) {
                "( {key} id : int = 0, "
                "name : string[50], "
                "{autoincrement} count : int, "
-               "{unique} weight : double)");
+               "{unique} hash : bytes[8])");
 
     EXPECT_THROW(db.execute("CREATE TABLE users "
                             "( {key} user_id : int = 0"), std::runtime_error) << "Same table names";

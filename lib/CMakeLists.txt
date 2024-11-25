@@ -29,7 +29,7 @@ add_library(database STATIC ${LIB_SOURCES})
 target_include_directories(database PUBLIC include)
 
 # Create tests files
-add_executable(test_database tests/create_tests.cpp)
+add_executable(test_database tests/create_tests.cpp tests/insert_tests.cpp)
 target_link_libraries(test_database database GTest::gtest GTest::gtest_main)
 enable_testing()
 add_test(AllTests my_tests)
