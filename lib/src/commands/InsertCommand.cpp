@@ -1,8 +1,6 @@
 #include "database/commands/InsertCommand.h"
 #include "database/database.h"
 
-#include <iomanip>
-
 namespace mem_db {
     void InsertCommand::execute(Database &db) const {
         Row row;

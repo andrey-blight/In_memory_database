@@ -42,6 +42,16 @@ TEST(CreateTest, IncorrectColumn) {
 
 }
 
+TEST(CreateTest, EqulentColumns) {
+    mem_db::Database db;
+
+    EXPECT_THROW(db.execute("CREATE TABLE users "
+                            "( {key} id : int = 0, "
+                            "name : string[50], "
+                            "{autoincrement} id : int)"), std::runtime_error) << "Incorrect column description";
+
+}
+
 TEST(CreateTest, EqulentTables) {
     mem_db::Database db;
 
@@ -52,6 +62,6 @@ TEST(CreateTest, EqulentTables) {
                "{unique} hash : bytes[8])");
 
     EXPECT_THROW(db.execute("CREATE TABLE users "
-                            "( {key} user_id : int = 0"), std::runtime_error) << "Same table names";
+                            "( {key} user_id : int = 0)"), std::runtime_error) << "Same table names";
 
 }

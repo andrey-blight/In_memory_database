@@ -1,4 +1,3 @@
-#include <iostream>
 #include <database/database.h>
 
 int main() {
@@ -11,7 +10,8 @@ int main() {
                "is_admin : bool, "
                "hash : bytes[8])");
 
-    db.execute("INSERT (1, \"Andrey\", true, 0xabcdef12) to users");
+    ;
+
 
     return 0;
 }
