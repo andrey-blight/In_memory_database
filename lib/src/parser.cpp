@@ -1,5 +1,4 @@
 #include <database/parser.h>
-#include <iostream>
 
 namespace mem_db {
     std::unique_ptr<ParserCommand> SQLParser::parse_query(const std::string &query) {
@@ -117,8 +116,6 @@ namespace mem_db {
                 default_value = bytes;
             }
 
-            std::cout << default_value.has_value() << "\n";
-
             Column col{name, type, is_unique, is_autoincrement, default_value, length};
             // push column
             columns.push_back(col);
@@ -145,6 +142,7 @@ namespace mem_db {
                 // push column if we find it
                 values.push_back(all_values.substr(start_column, i - start_column));
                 start_column = i + 1;
+                status = 0;
             }
         }
         // push last column
@@ -166,7 +164,6 @@ namespace mem_db {
             }
 
             if (value.empty()) {
-                values.push_back(value);
                 continue;
             }
 

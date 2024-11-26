@@ -56,6 +56,17 @@ namespace mem_db {
             }
         }
 
+        for (const auto &col_name: col_names) {
+            if (row.find(col_name) == row.end()) {
+                Column &current_col = (*columns.find(col_name)).second;
+                row[col_name] = current_col.get_value();
+
+                if (current_col.is_unique) {
+                    current_col.add_value(row[col_name]);
+                }
+            }
+        }
+
 
         table->insert_row(row);
     }
