@@ -6,7 +6,7 @@ namespace mem_db {
         this->table_name = table_name;
 
         for (const Column &col: columns) {
-            this->columns[col.name] = col;
+            this->columns.emplace(col.name, col);
             this->column_names.push_back(col.name);
         }
     }

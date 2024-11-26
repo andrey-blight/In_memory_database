@@ -21,7 +21,7 @@ namespace mem_db {
 
         [[nodiscard]] const std::string &get_table_name() const { return table_name; }
 
-        [[nodiscard]] const std::map<std::string, Column> &get_columns() const { return columns; }
+        [[nodiscard]] std::map<std::string, Column> &get_columns() { return columns; }
 
         [[nodiscard]] const std::vector<std::string> &get_col_names() const { return column_names; }
 

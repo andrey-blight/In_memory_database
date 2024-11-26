@@ -72,14 +72,16 @@ namespace mem_db {
             std::string type = column_matches[3];
             std::string default_value = column_matches[4];
 
+            std::cout << default_value << "\n";
+
             if (used_names.find(name) != used_names.end()) {
                 throw std::runtime_error("Column " + name + " already exist");
             }
             used_names.insert(name);
 
             // parse attributes
-            bool is_unique = attributes.find("unique") != std::string::npos;
-            bool is_primary_key = attributes.find("key") != std::string::npos;
+            bool is_unique =
+                    attributes.find("unique") != std::string::npos || attributes.find("key") != std::string::npos;
             bool is_autoincrement = attributes.find("autoincrement") != std::string::npos;
 
             // parse type and length
@@ -98,7 +100,7 @@ namespace mem_db {
                 throw std::runtime_error("Unsupported column type: " + type);
             }
 
-            Column col{name, type, is_unique, is_primary_key, is_autoincrement, default_value, length};
+            Column col{name, type, is_unique, is_autoincrement, default_value, length};
             // push column
             columns.push_back(col);
         }
@@ -142,6 +144,11 @@ namespace mem_db {
             } else if (!value.empty()) {
                 // this branch means we have value like "  \t " and we need delete spaces.
                 value = "";
+            }
+
+            if (value.empty()) {
+                values.push_back(value);
+                continue;
             }
 
             // if we have value like col_name=value we will watch only on value.
