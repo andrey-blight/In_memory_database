@@ -101,11 +101,17 @@ namespace mem_db {
             if (def.empty()) {
                 default_value = std::nullopt;
             } else if (type == "string") {
-                default_value = def.substr(1, def.length() - 1);
+                default_value = def.substr(1, def.length() - 2);
             } else if (type == "bool") {
                 default_value = def == "true";
             } else if (type == "bytes") {
                 std::vector<uint8_t> bytes;
+
+                if (def[0] == '\"') {
+                    def = def.substr(1, def.length() - 2);
+                } else {
+                    def = def.substr(2, def.length() - 2);
+                }
 
                 for (size_t j = 0; j < def.length(); j += 2) {
                     std::string byte_str = def.substr(j, 2);
@@ -114,6 +120,8 @@ namespace mem_db {
                 }
 
                 default_value = bytes;
+            } else if (type == "int") {
+                default_value = std::stoi(def);
             }
 
             Column col{name, type, is_unique, is_autoincrement, default_value, length};

@@ -70,8 +70,8 @@ TEST(IncludeTest, AutoValues) {
                "is_admin : bool=false, "
                "hash : bytes[8])");
 
-    db.execute("INSERT (, name=\"Andrey\",, hash=0xabcdef12) to users");
-    db.execute("INSERT (, name=\"Andrey\",is_admin=false, hash=0xabcdef12) to users");
+    db.execute("INSERT (, \"Andrey\",   , 0xabcdef12) to users");
+    db.execute("INSERT (name=\"Andrey\", is_admin=false, hash=0xabcdef12) to users");
 
     SUCCEED() << "SUCCESS INSERT";
 }

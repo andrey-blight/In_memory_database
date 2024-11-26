@@ -5,13 +5,11 @@ int main() {
     mem_db::Database db;
 
     db.execute("CREATE TABLE users "
-               "({autoincrement} id : int, "
-               "name : string[50], "
-               "is_admin : bool=false, "
-               "{unique} hash : bytes[8])");
-
-//    db.execute("INSERT (, \"Andrey\",, 0xabcdef12) to users");
-    db.execute("INSERT (name=\"Andrey\",is_admin=false, hash=0xabcdef12) to users");
+               "( {key} id : int = 0, "
+               "name : string[50] = \"user\", "
+               "is_admin : bool = false , "
+               "{unique} login_hash : bytes[10] = \"abcd\" ,"
+               "{unique} hash : bytes[8] = 0xabcdef)");
 
 
     return 0;

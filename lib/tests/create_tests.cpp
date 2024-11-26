@@ -65,3 +65,17 @@ TEST(CreateTest, EqulentTables) {
                             "( {key} user_id : int = 0)"), std::runtime_error) << "Same table names";
 
 }
+
+TEST(CreateTest, DefaultValues) {
+    mem_db::Database db;
+
+    db.execute("CREATE TABLE users "
+               "( {key} id : int = 0, "
+               "name : string[50] = \"user\", "
+               "is_admin : bool = false , "
+               "{unique} login_hash : bytes[10] = \"abcd\" ,"
+               "{unique} hash : bytes[8] = 0xabcdef)");
+
+    SUCCEED() << "Table created";
+
+}
