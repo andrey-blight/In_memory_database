@@ -1,11 +1,15 @@
 #include <database/database.h>
 
 namespace mem_db {
-    void Database::execute(const std::string &query) {
+    Response Database::execute(const std::string &query) {
         // execute SQL command
-
-        std::unique_ptr<ParserCommand> value = SQLParser::parse_query(query);
-        value->execute(*this);
+        try {
+            std::unique_ptr<ParserCommand> value = SQLParser::parse_query(query);
+            return value->execute(*this);
+        }
+        catch (const std::runtime_error &ex) {
+            return {static_cast<std::string>(ex.what())};
+        }
     }
 
 

@@ -12,6 +12,12 @@ namespace mem_db {
         bool is_ok;
         std::string error;
     public:
+        Response(std::vector<Row> resp, bool is_ok) : resp(resp), is_ok(is_ok), error("") {}
+
+        Response(bool is_ok) : resp({}), is_ok(is_ok), error("") {}
+
+        Response(std::string error) : resp({}), is_ok(false), error(error) {}
+
         bool status() const { return is_ok; }
 
         std::string get_error() const { return error; }

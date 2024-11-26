@@ -21,7 +21,7 @@ namespace mem_db {
 
         [[nodiscard]] std::vector<Column> get_columns() const { return columns; }
 
-        void execute(Database &db) const override;
+        Response execute(Database &db) const override;
     };
 
 }

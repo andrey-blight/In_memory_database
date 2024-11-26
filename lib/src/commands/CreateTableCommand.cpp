@@ -2,7 +2,7 @@
 #include "database/database.h"
 
 namespace mem_db {
-    void CreateTableCommand::execute(Database &db) const {
+    Response CreateTableCommand::execute(Database &db) const {
         std::map<std::string, std::shared_ptr<Table>> &tables = db.get_tables();
         if (tables.find(table_name) != tables.end()) {
             throw std::runtime_error("Table " + table_name + " already exist");
@@ -13,5 +13,7 @@ namespace mem_db {
 
         // move create command to logger for print log
         Logger::create_log(const_cast<CreateTableCommand &>(*this));
+
+        return {true};
     }
 }

@@ -9,6 +9,7 @@
 #include "parser.h"
 #include "table.h"
 #include "logger.h"
+#include "response.h"
 
 namespace mem_db {
     class Database {
@@ -19,7 +20,7 @@ namespace mem_db {
 
         [[nodiscard]] std::map<std::string, std::shared_ptr<Table>> &get_tables() { return tables; }
 
-        void execute(const std::string &query);
+        Response execute(const std::string &query);
     };
 }
 

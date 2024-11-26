@@ -3,7 +3,9 @@
 #include <iostream>
 
 namespace mem_db {
-    void SelectCommand::execute(Database &db) const {
+    Response SelectCommand::execute(Database &db) const {
         std::cout << "Executing SELECT on table: " << table_name << "\n";
+
+        return {true};
     }
 }

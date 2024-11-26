@@ -2,7 +2,7 @@
 #include "database/database.h"
 
 namespace mem_db {
-    void InsertCommand::execute(Database &db) const {
+    Response InsertCommand::execute(Database &db) const {
         Row row;
         std::shared_ptr<Table> table = db.get_tables()[table_name];
         auto &columns = table->get_columns();
@@ -69,6 +69,8 @@ namespace mem_db {
 
 
         table->insert_row(row);
+
+        return {true};
     }
 }
 

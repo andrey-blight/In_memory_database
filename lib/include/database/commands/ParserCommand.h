@@ -2,6 +2,7 @@
 #define DATABASE_PARSER_COMMAND_H
 
 #include <string>
+#include "database/response.h"
 
 namespace mem_db {
     class Database;
@@ -10,7 +11,7 @@ namespace mem_db {
     public:
         virtual ~ParserCommand() = default;
 
-        virtual void execute(Database &db) const = 0;
+        virtual Response execute(Database &db) const = 0;
     };
 }
 

@@ -18,7 +18,7 @@ namespace mem_db {
                 table_name(std::move(table_name)),
                 values(std::move(values)) {}
 
-        void execute(Database &db) const override;
+        Response execute(Database &db) const override;
     };
 
 }
