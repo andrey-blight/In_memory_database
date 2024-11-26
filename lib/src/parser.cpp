@@ -70,9 +70,7 @@ namespace mem_db {
             std::string attributes = column_matches[1];
             std::string name = column_matches[2];
             std::string type = column_matches[3];
-            std::string default_value = column_matches[4];
-
-            std::cout << default_value << "\n";
+            std::string def = column_matches[4];
 
             if (used_names.find(name) != used_names.end()) {
                 throw std::runtime_error("Column " + name + " already exist");
@@ -99,6 +97,27 @@ namespace mem_db {
             if (type != "int" && type != "bool" && type != "string" && type != "bytes") {
                 throw std::runtime_error("Unsupported column type: " + type);
             }
+
+            std::optional<Cell> default_value;
+            if (def.empty()) {
+                default_value = std::nullopt;
+            } else if (type == "string") {
+                default_value = def.substr(1, def.length() - 1);
+            } else if (type == "bool") {
+                default_value = def == "true";
+            } else if (type == "bytes") {
+                std::vector<uint8_t> bytes;
+
+                for (size_t j = 0; j < def.length(); j += 2) {
+                    std::string byte_str = def.substr(j, 2);
+                    auto byte = static_cast<uint8_t>(std::stoul(byte_str, nullptr, 16));
+                    bytes.push_back(byte);
+                }
+
+                default_value = bytes;
+            }
+
+            std::cout << default_value.has_value() << "\n";
 
             Column col{name, type, is_unique, is_autoincrement, default_value, length};
             // push column
