@@ -12,6 +12,7 @@
 #include "commands/ParserCommand.h"
 #include "commands/CreateTableCommand.h"
 #include "commands/InsertCommand.h"
+#include "commands/SelectCommand.h"
 
 namespace mem_db {
 
@@ -23,6 +24,8 @@ namespace mem_db {
         static std::unique_ptr<CreateTableCommand> parse_create_statement(const std::smatch &matches);
 
         static std::unique_ptr<InsertCommand> parse_insert_statement(const std::smatch &matches);
+
+        static std::unique_ptr<SelectCommand> parse_select_statement(const std::smatch &matches);
     };
 }
 

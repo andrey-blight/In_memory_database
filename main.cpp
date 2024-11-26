@@ -4,13 +4,14 @@ int main() {
 
     mem_db::Database db;
 
-    db.execute("CREATE TABLE users "
-               "( {key} id : int = 0, "
-               "name : string[50] = \"user\", "
-               "is_admin : bool = false , "
-               "{unique} login_hash : bytes[10] = \"abcd\" ,"
-               "{unique} hash : bytes[8] = 0xabcdef)");
+//    db.execute("CREATE TABLE users "
+//               "( id : int, "
+//               "name : string[50])");
+//
+//    db.execute("INSERT (1, \"Andrey\") to users");
+//    db.execute("INSERT (name=\"Vadim\", id=2) to users");
 
+    db.execute("SELECT id, name from users where something");
 
     return 0;
 }

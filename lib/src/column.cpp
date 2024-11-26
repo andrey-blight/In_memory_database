@@ -26,6 +26,10 @@ namespace mem_db {
     }
 
     void Column::add_value(const mem_db::Cell &val) {
+        if (is_unique && has_value(val)) {
+            throw std::runtime_error("Cell " + name + " is unique");
+        }
+
         values.push_back(val);
     }
 

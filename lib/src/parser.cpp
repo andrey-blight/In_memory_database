@@ -1,4 +1,5 @@
 #include <database/parser.h>
+#include <iostream>
 
 namespace mem_db {
     std::unique_ptr<ParserCommand> SQLParser::parse_query(const std::string &query) {
@@ -9,12 +10,18 @@ namespace mem_db {
         std::regex insert_regex(
                 R"(^\s*INSERT\s+\(([^)]+)\)\s+TO\s+([A-Za-z_][\w]*)\s*$)",
                 std::regex_constants::icase);
+        std::regex select_regex(
+                R"(^\s*SELECT\s+([\w\s,]+)\s+FROM\s+([A-Za-z_]\w*)(?:\s+WHERE\s+(.+))?\s*$)",
+                std::regex_constants::icase);
 
         // check what query we have by matching with all regex
         std::smatch matches;
         if (std::regex_match(query, matches, create_table_regex)) {
             return parse_create_statement(matches);
         } else if (std::regex_match(query, matches, insert_regex)) {
+            return parse_insert_statement(matches);
+        } else if (std::regex_match(query, matches, select_regex)) {
+            std::cout << "select" << "\n";
             return parse_insert_statement(matches);
         } else {
             throw std::runtime_error("Unsupportable command");
@@ -215,5 +222,10 @@ namespace mem_db {
         }
 
         return std::make_unique<InsertCommand>(InsertCommand(eq_statement, table_name, values));
+    }
+
+    std::unique_ptr<SelectCommand> SQLParser::parse_select_statement(const std::smatch &matches) {
+        std::cout << matches[0] << '\n' << matches[1] << '\n' << matches[2] << '\n' << matches[3] << '\n';
+        return std::make_unique<SelectCommand>(SelectCommand("a", {"a"}));
     }
 }
