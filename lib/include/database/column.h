@@ -8,6 +8,8 @@
 #include <vector>
 #include <optional>
 #include <stdexcept>
+#include <algorithm>
+#include <ranges>
 
 namespace mem_db {
     using Cell = std::variant<int, std::string, bool, std::vector<uint8_t>>;
