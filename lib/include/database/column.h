@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <utility>
+#include <variant>
 
 namespace mem_db {
     using Cell = std::variant<int, std::string, bool, std::vector<uint8_t>>;
